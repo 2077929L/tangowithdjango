@@ -8,7 +8,7 @@ from rango.models import Category, Page
 
 
 def populate():
-    python_cat = add_cat('Python')
+    python_cat = add_cat('Python',8 , 16)
 
     add_page(cat=python_cat,
         title="Official Python Tutorial",
@@ -22,7 +22,7 @@ def populate():
         title="Learn Python in 10 Minutes",
         url="http://www.korokithakis.net/tutorials/python/")
 
-    django_cat = add_cat("Django")
+    django_cat = add_cat("Django",16 , 32)
 
     add_page(cat=django_cat,
         title="Official Django Tutorial",
@@ -36,7 +36,7 @@ def populate():
         title="How to Tango with Django",
         url="http://www.tangowithdjango.com/")
 
-    frame_cat = add_cat("Other Frameworks")
+    frame_cat = add_cat("Other Frameworks",64, 64)
 
     add_page(cat=frame_cat,
         title="Bottle",
@@ -45,6 +45,13 @@ def populate():
     add_page(cat=frame_cat,
         title="Flask",
         url="http://flask.pocoo.org")
+
+    weronika_cat = add_cat("Weronika",55 , 44)
+	
+    add_page(cat=weronika_cat,
+        title="Weronika's Git Hub Account",
+        url="https://github.com/2077929L")
+		
 
     # Print out what we have added to the user.
     for c in Category.objects.all():
