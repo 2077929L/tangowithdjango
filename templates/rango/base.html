@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 {% load rango_extras %}
 {% load staticfiles %}
 <html lang="en">
@@ -56,23 +56,40 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row">
+        <div class="row">
 
-        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="col-sm-3 col-md-2 sidebar">
 
-            {% block side_block %}
-            {% get_category_list category %}
-            {% endblock %}
+                <ul class="nav nav-list">
+                    <li class="nav-header">Find a Category</li>
+                    <form>
+                        <label></label>
+                        <li><input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" /></li>
+                    </form>
+                </ul>
 
-        </div>
+                <div id="cats">
+                </div>
+
+
+            <br>
+
+
+
+                {% block side_block %}
+                    {% get_category_list category %}
+                {% endblock %}
+
+            </div>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-           <div>
+            <div>
                 {% block body_block %}{% endblock %}
-                </div>
+            </div>
         </div>
-      </div>
+    </div>
+
     </div>
 
     <!-- Bootstrap core JavaScript
