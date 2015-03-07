@@ -72,12 +72,13 @@ def about(request):
     # remember to include the visit data
     return render(request, 'rango/about.html', {'visits': count})
 
-	
-	
+
+
 def category(request, category_name_slug):
 
     # Create a context dictionary which we can pass to the template rendering engine.
     context_dict = {}
+    result_list = []
 
     try:
         # Can we find a category name slug with the given name?
@@ -95,12 +96,22 @@ def category(request, category_name_slug):
         # We also add the category object from the database to the context dictionary.
         # We'll use this in the template to verify that the category exists.
         context_dict['category'] = category
+
+        if request.method == 'POST':
+            query = request.POST['query'].strip()
+
+            if query:
+                # Run our Bing function to get the results list!
+                result_list = run_query(query)
+
     except Category.DoesNotExist:
         # We get here if we didn't find the specified category.
         # Don't do anything - the template displays the "no category" message for us.
         pass
 
     # Go render the response and return it to the client.
+    context_dict['result_list'] = result_list
+
     return render(request, 'rango/category.html', context_dict)
 
 
@@ -203,7 +214,7 @@ def like_category(request):
         cat = Category.objects.get(id=int(cat_id))
         if cat:
             likes = cat.likes + 1
-            cat.likes =  likes
+            cat.likes = likes
             cat.save()
 
     return HttpResponse(likes)
