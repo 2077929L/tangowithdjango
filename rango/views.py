@@ -12,6 +12,7 @@ from datetime import datetime
 from rango.bing_search import run_query
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 
@@ -243,3 +244,33 @@ def suggest_category(request):
 
         return render(request, 'rango/category_list.html', {'cat_list': cat_list })
 
+
+@login_required
+def register_profile(request):
+
+    if request.method == 'POST':
+        profile_form = UserProfileForm(data=request.POST)
+
+        if profile_form.is_valid():
+            profile = profile_form.save(commit=False)
+            profile.user_id = request.user.id
+            # Did the user provide a profile picture?
+            # If so, we need to get it from the input form and put it in the UserProfile model.
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            # Now we save the UserProfile model instance.
+            profile.save()
+            return HttpResponseRedirect('/rango/')
+
+        # Invalid form or forms - mistakes or something else?
+        # Print problems to the terminal.
+        # They'll also be shown to the user.
+        else:
+            print profile_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    # These forms will be blank, ready for user input.
+    else:
+        profile_form = UserProfileForm()
+
+    return render(request, 'rango/profile_registration.html', {'profile_form': profile_form })
