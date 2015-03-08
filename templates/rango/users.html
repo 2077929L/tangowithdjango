@@ -1,0 +1,26 @@
+{% extends 'rango/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}All Users{% endblock %}
+
+{% block body_block %}
+
+    <br>
+    <div class="row placeholders">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h1 class="panel-title">All Users</h1>
+                </div>
+            </div>
+
+            {% if users %}
+                {% for user in users %}
+                    <li class="list-group-item"><a href="{% url 'profile' user.username%}">{{ user.username }}</a></li>
+                {% endfor %}
+            {% else %}
+                <strong>There are no users present.</strong>
+            {% endif %}
+    </div>
+
+{% endblock %}

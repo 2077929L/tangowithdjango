@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rango.models import Category
-from rango.models import Page
+from rango.models import Page, UserProfile
 from rango.forms import CategoryForm
 from rango.forms import PageForm
 from rango.forms import UserForm, UserProfileForm
@@ -13,7 +13,6 @@ from rango.bing_search import run_query
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
 
 
 def index(request):
@@ -274,3 +273,25 @@ def register_profile(request):
         profile_form = UserProfileForm()
 
     return render(request, 'rango/profile_registration.html', {'profile_form': profile_form })
+
+
+@login_required
+def profile(request, username):
+    context_dict = {}
+
+    user = User.objects.get(username = username)
+    userprofile = UserProfile.objects.get(user = user)
+
+    context_dict['userprofile'] = userprofile
+    context_dict['user'] = user
+
+    return render(request, 'rango/profile.html', context_dict)
+
+
+
+def users(request):
+    context_dict = {}
+    user_list = User.objects.order_by('username')
+    context_dict['users'] = user_list
+
+    return render(request,'rango/users.html', context_dict)
