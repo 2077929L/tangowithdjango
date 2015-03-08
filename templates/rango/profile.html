@@ -17,7 +17,7 @@
             {% endif %}
 
             <br>
-            {% if user.is_authenticated and logged_in_user == user.username %}
+            {% if user.is_authenticated and logged_in_user == user2.username %}
                 <h1>Change your profile here! </h1><br/>
 
                 <form id="user_form" method="post" action="{% url 'profile' user.username %}" enctype="multipart/form-data">

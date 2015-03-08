@@ -286,40 +286,6 @@ def users(request):
 
 
 
-
-@login_required
-def profile5(request, username):
-    context_dict = {}
-    user = User.objects.get(username = username)
-    userprofile = UserProfile.objects.get(user = user)
-    context_dict['userprofile'] = userprofile
-    context_dict['user'] = user
-
-    if request.method == 'POST':
-        profile_form = UserProfileForm(data=request.POST)
-
-        if profile_form.is_valid():
-            profile = UserProfile.objects.get(user = user)
-            profile.user_id = request.user.id
-            profile = profile_form.save(commit=False)
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-
-            profile.save()
-
-            return HttpResponseRedirect('/rango/profile/' + username)
-        else:
-            print profile_form.errors
-    else:
-        profile_form = UserProfileForm()
-        user_form = UserForm()
-    context_dict['profile_form'] = profile_form
-    context_dict['user_form'] = user_form
-
-    return render(request, 'rango/profile.html', context_dict)
-
-
-
 @login_required
 def profile(request, username):
     context_dict = {}
