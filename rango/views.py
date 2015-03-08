@@ -244,6 +244,8 @@ def suggest_category(request):
         return render(request, 'rango/category_list.html', {'cat_list': cat_list })
 
 
+
+
 @login_required
 def register_profile(request):
 
@@ -275,23 +277,75 @@ def register_profile(request):
     return render(request, 'rango/profile_registration.html', {'profile_form': profile_form })
 
 
-@login_required
-def profile(request, username):
-    context_dict = {}
-
-    user = User.objects.get(username = username)
-    userprofile = UserProfile.objects.get(user = user)
-
-    context_dict['userprofile'] = userprofile
-    context_dict['user'] = user
-
-    return render(request, 'rango/profile.html', context_dict)
-
-
-
 def users(request):
     context_dict = {}
     user_list = User.objects.order_by('username')
     context_dict['users'] = user_list
 
     return render(request,'rango/users.html', context_dict)
+
+
+
+
+@login_required
+def profile5(request, username):
+    context_dict = {}
+    user = User.objects.get(username = username)
+    userprofile = UserProfile.objects.get(user = user)
+    context_dict['userprofile'] = userprofile
+    context_dict['user'] = user
+
+    if request.method == 'POST':
+        profile_form = UserProfileForm(data=request.POST)
+
+        if profile_form.is_valid():
+            profile = UserProfile.objects.get(user = user)
+            profile.user_id = request.user.id
+            profile = profile_form.save(commit=False)
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+
+            return HttpResponseRedirect('/rango/profile/' + username)
+        else:
+            print profile_form.errors
+    else:
+        profile_form = UserProfileForm()
+        user_form = UserForm()
+    context_dict['profile_form'] = profile_form
+    context_dict['user_form'] = user_form
+
+    return render(request, 'rango/profile.html', context_dict)
+
+
+
+@login_required
+def profile(request, username):
+    context_dict = {}
+    user = User.objects.get(username = username)
+    userprofile = UserProfile.objects.get(user = user)
+    context_dict['userprofile'] = userprofile
+    context_dict['user2'] = user
+
+    if request.method == 'POST':
+        profile_form = UserProfileForm(data = request.POST, instance = userprofile)
+
+        if profile_form.is_valid():
+            profile = profile_form.save(commit=False)
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+
+            return HttpResponseRedirect('/rango/profile/' + username)
+        else:
+            print profile_form.errors
+    else:
+        profile_form = UserProfileForm()
+        user_form = UserForm()
+    context_dict['profile_form'] = profile_form
+    context_dict['user_form'] = user_form
+    logged_in_user = request.user.username
+    context_dict['logged_in_user'] = logged_in_user
+
+    return render(request, 'rango/profile.html', context_dict)
